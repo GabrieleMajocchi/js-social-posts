@@ -127,3 +127,12 @@ h1 {
 .color-red{
     color: red;
 }
+
+.null-pic{
+    background-color: rgb(177, 177, 177);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    padding: 18px 21px;
+    font-weight: bold;
+}
