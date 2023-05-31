@@ -47,7 +47,7 @@ const posts = [
 ];
 
 const container = document.querySelector('#container')
-const likesid = [];
+let likesid = [];
 
 posts.forEach(post => {
     let split = (post.created).split('-')
@@ -99,11 +99,10 @@ if((authorimg.firstElementChild.attributes[1].value) == "null"){
 like.addEventListener('click', function(){
     if(text.classList[2] === 'color-red'){
         likecounterprint.innerHTML = parseInt(likecounterprint.innerHTML)-1;
+        likesid = likesid.filter(item => item !== i)
     }else{
     likecounterprint.innerHTML = parseInt(likecounterprint.innerHTML)+1;
+    likesid.push(i);
     }
     text.classList.toggle('color-red');
-    if(!likesid.includes(i)){
-        likesid.push(i);
-    }
 })};
