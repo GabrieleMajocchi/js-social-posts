@@ -3,7 +3,7 @@ const posts = [
         "content": "Placeat libero ipsa nobis ipsum quibusdam quas harum ut. Distinctio minima iusto. Ad ad maiores et sint voluptate recusandae architecto. Et nihil ullam aut alias.",
         "media": "https://unsplash.it/600/300?image=171",
         "author": {
-            "name": "Phil Mangione",
+            "authorName": "Phil Mangione",
             "image": "https://unsplash.it/300/300?image=15"
         },
         "likes": 80,
@@ -12,7 +12,7 @@ const posts = [
         "content": "Placeat libero ipsa nobis ipsum quibusdam quas harum ut. Distinctio minima iusto. Ad ad maiores et sint voluptate recusandae architecto. Et nihil ullam aut alias.",
         "media": "https://unsplash.it/600/400?image=112",
         "author": {
-            "name": "Sofia Perlari",
+            "authorName": "Sofia Perlari",
             "image": "https://unsplash.it/300/300?image=10"
         },
         "likes": 120,
@@ -21,7 +21,7 @@ const posts = [
         "content": "Placeat libero ipsa nobis ipsum quibusdam quas harum ut. Distinctio minima iusto. Ad ad maiores et sint voluptate recusandae architecto. Et nihil ullam aut alias.",
         "media": "https://unsplash.it/600/400?image=234",
         "author": {
-            "name": "Chiara Passaro",
+            "authorName": "Chiara Passaro",
             "image": "https://unsplash.it/300/300?image=20"
         },
         "likes": 78,
@@ -30,7 +30,7 @@ const posts = [
         "content": "Placeat libero ipsa nobis ipsum quibusdam quas harum ut. Distinctio minima iusto. Ad ad maiores et sint voluptate recusandae architecto. Et nihil ullam aut alias.",
         "media": "https://unsplash.it/600/400?image=24",
         "author": {
-            "name": "Luca Formicola",
+            "authorName": "Luca Formicola",
             "image": null
         },
         "likes": 56,
@@ -39,7 +39,7 @@ const posts = [
         "content": "Placeat libero ipsa nobis ipsum quibusdam quas harum ut. Distinctio minima iusto. Ad ad maiores et sint voluptate recusandae architecto. Et nihil ullam aut alias.",
         "media": "https://unsplash.it/600/400?image=534",
         "author": {
-            "name": "Alessandro Sainato",
+            "authorName": "Alessandro Sainato",
             "image": "https://unsplash.it/300/300?image=29"
         },
         "likes": 95,
@@ -53,14 +53,14 @@ posts.forEach(post => {
     let split = (post.created).split('-')
     post.created = split[2]+'-'+split[1]+'-'+split[0]
 
-    container.innerHTML += `<div class="post">
+    container.innerHTML += `<div class="post ${post.id}">
     <div class="post__header">
         <div class="post-meta">                    
-            <div class="post-meta__icon img${post.id}">
-                <img class="profile-pic" src="${post.author.image}" alt="${post.author.name}">                    
+            <div class="post-meta__icon">
+                <img class="profile-pic" src="${post.author.image}" alt="${post.author.authorName}">                    
             </div>
             <div class="post-meta__data">
-                <div class="post-meta__author">${post.author.name}</div>
+                <div class="post-meta__author">${post.author.authorName}</div>
                 <div class="post-meta__time">${post.created}</div>
             </div>                    
         </div>
@@ -71,8 +71,8 @@ posts.forEach(post => {
     </div>
     <div class="post__footer">
         <div class="likes js-likes">
-            <div id="likes__cta${post.id}">
-                <a id="like-button${post.id}" class="js-like-button like-button" data-postid="1">
+            <div class="likes__cta">
+                <a class="like-button  js-like-button" data-postid="1">
                     <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
                     <span class="like-button__label">Mi Piace</span>
                 </a>
@@ -85,25 +85,30 @@ posts.forEach(post => {
 </div>`;
 });
 
-for(let i=1; i<=posts.length; i++){
-const authorimg = document.querySelector('.img'+i)
-const like = document.getElementById('likes__cta'+i);
-const likecounterprint = document.getElementById('like-counter-'+i);
-const text = document.getElementById('like-button'+i);
-const name = (authorimg.firstElementChild.attributes.alt.textContent).replace(/[^A-Z]+/g, "");
 
-if((authorimg.firstElementChild.attributes[1].value) == "null"){
-    authorimg.innerHTML = `<p class="null-pic">${name}</p>`;
-}
+let userpost = document.querySelectorAll('div.post');
+console.log(userpost)
 
-like.addEventListener('click', function(){
-    if(text.classList[2] === 'color-red'){
-        likecounterprint.innerHTML = parseInt(likecounterprint.innerHTML)-1;
-        likesid = likesid.filter(item => item !== i);
-    }else{
-    likecounterprint.innerHTML = parseInt(likecounterprint.innerHTML)+1;
-    likesid.push(i);
+userpost.forEach(post => {
+    const authorImg = post.querySelector('img.profile-pic');
+    const like = post.querySelector('div.likes__cta');
+    const likecounterprint = post.querySelector('div.likes__counter');
+    const likeButton = post.querySelector('a.like-button');
+    const authorName = (authorImg.attributes.alt.textContent).replace(/[^A-Z]+/g, "");
+        
+    if((authorImg.attributes[1].value) == "null"){
+        authorImg.outerHTML = `<p class="null-pic">${authorName}</p>`;
     }
-    text.classList.toggle('color-red');
-    console.log(likesid);
-})};
+    
+    like.addEventListener('click', function(){
+        if(likeButton.classList[2] === 'color-red'){
+            likecounterprint.firstElementChild.innerHTML = parseInt(likecounterprint.firstElementChild.innerHTML)-1;
+            likesid = likesid.filter(item => item !== post.classList[1]);
+        }else{
+        likecounterprint.firstElementChild.innerHTML = parseInt(likecounterprint.firstElementChild.innerHTML)+1;
+        likesid.push(post.classList[1]);
+        }
+        likeButton.classList.toggle('color-red');
+        console.log(likesid);
+    })
+});
